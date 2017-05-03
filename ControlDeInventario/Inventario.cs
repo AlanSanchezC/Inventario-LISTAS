@@ -31,6 +31,30 @@ namespace ControlDeInventario
             return true;
         }
 
+        private string recorrerInvertido(Producto pr, ref string cad)
+        {
+            if (pr.siguiente != null)
+            {
+                recorrerInvertido(pr.siguiente, ref cad);
+                return cad += pr.siguiente.ToString() + Environment.NewLine;
+            }
+            return "";
+        }
+
+        public string reporteInvertido()
+        {
+            string cadena = "";
+
+            if (inicio.siguiente == null)
+                return inicio.ToString();
+            else
+            {
+                recorrerInvertido(inicio, ref cadena);
+                
+                return cadena + inicio.ToString();
+            }
+        }
+        
         public string reporte()
         {
             string cad = "";
@@ -49,9 +73,14 @@ namespace ControlDeInventario
         {
             Producto pr = inicio;
 
-            while(pr.codigo != codigo)
+            bool encontrado = false;
+
+            while(!encontrado)
             {
-                pr = pr.siguiente;
+                if (pr == null || pr.codigo == codigo)
+                    encontrado = true;
+                else
+                    pr = pr.siguiente;
             }
             return pr;
         }
@@ -92,11 +121,15 @@ namespace ControlDeInventario
 
             while (!encontrado)
             {
+                if (pr.siguiente == null)
+                    encontrado = true;
+                else
                 if (pr.siguiente.codigo == codigo)
                 {
                     pr.siguiente = pr.siguiente.siguiente;
                     encontrado = true;
                 }
+                else
                 pr = pr.siguiente;
             }
         }
